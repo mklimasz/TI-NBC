@@ -1,7 +1,7 @@
 # (TI-)NBC
 NBC [[1]](#references) and TI-NBC [[2]](#references) implementations for Data Mining course @ WUT. 
 
-##NBC algorithm 
+## NBC algorithm 
 
 ## TI-NBC algorithm
 
