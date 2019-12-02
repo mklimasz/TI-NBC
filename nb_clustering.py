@@ -10,9 +10,9 @@ NOISE = Set[nb.VECTOR_ID]
 
 
 def nbc(vectors: np.array, k: int) -> Tuple[CLUSTERS, NOISE]:
-    cluster_no = {}
+    clusters = {}
     for idx, _ in enumerate(vectors):
-        cluster_no[idx] = -1
+        clusters[idx] = -1
     noise = set()
 
     knb, r_knb = nb.k_neighbourhood(vectors, k)
@@ -20,37 +20,37 @@ def nbc(vectors: np.array, k: int) -> Tuple[CLUSTERS, NOISE]:
 
     current_cluster_id = 0
     for idx, v in enumerate(vectors):
-        if _has_cluster(idx, cluster_no) or not _is_dense_point(idx, ndf):
+        if _has_cluster(idx, clusters) or not _is_dense_point(idx, ndf):
             continue
-        cluster_no[idx] = current_cluster_id
+        clusters[idx] = current_cluster_id
         dense_points = set()
 
         for n_idx in knb[idx]:
-            cluster_no[n_idx] = current_cluster_id
+            clusters[n_idx] = current_cluster_id
             if _is_dense_point(n_idx, ndf):
                 dense_points.add(n_idx)
 
         while dense_points:
             p = dense_points.pop()
             for n_idx in knb[p]:
-                if _has_cluster(idx, cluster_no):
+                if _has_cluster(idx, clusters):
                     continue
-                cluster_no[n_idx] = current_cluster_id
+                clusters[n_idx] = current_cluster_id
                 if _is_dense_point(n_idx, ndf):
                     dense_points.add(n_idx)
 
         current_cluster_id += 1
 
     for idx, v in enumerate(vectors):
-        if cluster_no[idx] == -1:
+        if clusters[idx] == -1:
             noise.add(idx)
 
-    return cluster_no, noise
+    return clusters, noise
 
 
-def _is_dense_point(idx: int, ndf: Dict[int, float]) -> bool:
+def _is_dense_point(idx: nb.VECTOR_ID, ndf: nb.NDF) -> bool:
     return ndf[idx] >= 1
 
 
-def _has_cluster(idx: int, clusters: Dict[int, int]) -> bool:
+def _has_cluster(idx: nb.VECTOR_ID, clusters: CLUSTERS) -> bool:
     return clusters[idx] != -1
