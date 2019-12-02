@@ -18,6 +18,7 @@ def k_neighbourhood(vectors: np.array, k: int) -> Tuple[KNB, R_KNB]:
         distances = []
         for idx2, v2 in enumerate(vectors):
             if idx1 != idx2:
+                # TODO support other distances
                 dist = np.linalg.norm(v2 - v1)
                 distances.append((idx2, dist))
         distances.sort(key=lambda t: t[1])
