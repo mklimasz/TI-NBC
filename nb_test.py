@@ -44,7 +44,7 @@ class KNeighbourhoodTest(unittest.TestCase):
             self.assertIn(2, r_knb[idx])
 
 
-class NeighborhoodBasedDensityFactorTest(unittest.TestCase):
+class NeighbourhoodBasedDensityFactorTest(unittest.TestCase):
 
     def test_ndf(self):
         # given

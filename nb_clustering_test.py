@@ -5,7 +5,7 @@ import numpy as np
 import nb_clustering
 
 
-class NeighborhoodBasedClusteringTest(unittest.TestCase):
+class NeighbourhoodBasedClusteringTest(unittest.TestCase):
 
     def test_nbc(self):
         # given
