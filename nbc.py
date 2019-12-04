@@ -1,22 +1,30 @@
-from typing import Dict, Tuple, Set
+from typing import Dict, Set, Tuple, Union
 
 import numpy as np
 
-import nb
+import neighbourhood
 
 CLUSTER_ID = int
-CLUSTERS = Dict[nb.VECTOR_ID, CLUSTER_ID]
-NOISE = Set[nb.VECTOR_ID]
+VECTOR_ID = int
+CLUSTERS = Dict[VECTOR_ID, CLUSTER_ID]
+NOISE = Set[VECTOR_ID]
+KNB = Dict[VECTOR_ID, Set]
+NDF = Dict[VECTOR_ID, float]
+R_KNB = Dict[VECTOR_ID, Set]
 
 
-def nbc(vectors: np.array, k: int) -> Tuple[CLUSTERS, NOISE]:
+def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None) -> Tuple[CLUSTERS, NOISE]:
     clusters = {}
     for idx, _ in enumerate(vectors):
         clusters[idx] = -1
     noise = set()
 
-    knb, r_knb = nb.k_neighbourhood(vectors, k)
-    ndf = nb.ndf(knb, r_knb)
+    if reference_point is not None:
+        knb, r_knb = neighbourhood.ti_k_neighbourhood(vectors, k, reference_point)
+    else:
+        knb, r_knb = neighbourhood.k_neighbourhood(vectors, k)
+
+    ndf = neighbourhood.ndf(knb, r_knb)
 
     current_cluster_id = 0
     for idx, v in enumerate(vectors):
@@ -48,9 +56,9 @@ def nbc(vectors: np.array, k: int) -> Tuple[CLUSTERS, NOISE]:
     return clusters, noise
 
 
-def _is_dense_point(idx: nb.VECTOR_ID, ndf: nb.NDF) -> bool:
+def _is_dense_point(idx: VECTOR_ID, ndf: NDF) -> bool:
     return ndf[idx] >= 1
 
 
-def _has_cluster(idx: nb.VECTOR_ID, clusters: CLUSTERS) -> bool:
+def _has_cluster(idx: VECTOR_ID, clusters: CLUSTERS) -> bool:
     return clusters[idx] != -1

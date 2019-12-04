@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-import nb
+import neighbourhood
 
 
 class KNeighbourhoodTest(unittest.TestCase):
@@ -17,7 +17,7 @@ class KNeighbourhoodTest(unittest.TestCase):
         ])
 
         # when
-        knb, r_knb = nb.k_neighbourhood(vectors, k)
+        knb, r_knb = neighbourhood.k_neighbourhood(vectors, k)
 
         # then
         expected_nb = {0: {1, 2}, 1: {0, 2}, 2: {0, 1}}
@@ -35,7 +35,7 @@ class KNeighbourhoodTest(unittest.TestCase):
         ])
 
         # when
-        knb, r_knb = nb.k_neighbourhood(vectors, k)
+        knb, r_knb = neighbourhood.k_neighbourhood(vectors, k)
 
         # then
         self.assertSetEqual(knb[2], {1, 3, 4})
@@ -55,7 +55,7 @@ class NeighbourhoodBasedDensityFactorTest(unittest.TestCase):
         r_knb = {0: {1}, 1: {0, 2, 3}, 2: {0, 1, 3}, 3: {2}}
 
         # when
-        ndf = nb.ndf(knb, r_knb)
+        ndf = neighbourhood.ndf(knb, r_knb)
 
         # then
         expected_ndfs = {0: 0.5, 1: 1.5, 2: 1.5, 3: 0.5}

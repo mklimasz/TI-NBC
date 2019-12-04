@@ -1,1 +1,2 @@
 numpy==1.17.3
+sortedcontainers==2.1.0
