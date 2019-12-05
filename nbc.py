@@ -14,6 +14,15 @@ R_KNB = Dict[VECTOR_ID, Set]
 
 
 def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None) -> Tuple[CLUSTERS, NOISE]:
+    """A Neighborhood-Based Clustering Algorithm.
+
+    :param vectors: numpy array in NxD dim (N - number of examples, D - dimensionality of each example)
+    :param k: parameter of minimum required neighbours
+    :param reference_point: (optional) reference point to use the Triangle Inequality optimization
+    :return: Tuple of:
+                Dictionary with indices (based on the position in vectors param) as keys and cluster index as value
+                Set of noise points without any assigned cluster.
+    """
     clusters = {}
     for idx, _ in enumerate(vectors):
         clusters[idx] = -1

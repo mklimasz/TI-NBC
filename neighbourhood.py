@@ -1,4 +1,4 @@
-from typing import Set, Dict, Tuple
+from typing import Set, Dict, Tuple, List
 
 import numpy as np
 from sortedcontainers import SortedSet
@@ -14,7 +14,7 @@ def distance(v1: np.array, v2: np.array) -> float:
     return np.linalg.norm(v1 - v2)
 
 
-class Point:
+class _Point:
 
     def __init__(self, idx, vector, dist, preceding=None, following=None):
         self.idx = idx
@@ -80,7 +80,7 @@ def _fill(knb, r_knb, vector_idx, neighbours):
         r_knb[n].add(vector_idx)
 
 
-def _ti_neighbours(point: Point, k):
+def _ti_neighbours(point: _Point, k):
     bp = point
     fp = point
     backward_search = bp.preceding
@@ -104,7 +104,7 @@ def _ti_neighbours(point: Point, k):
     return [n[0].idx for n in neighbour_candidates]
 
 
-def _verify_forward(p: Point, fp: Point, forward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
+def _verify_forward(p: _Point, fp: _Point, forward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
     while forward_search and (p.dist - fp.dist) <= eps:
         dist = distance(fp.vector, p.vector)
         if dist < eps:
@@ -123,7 +123,7 @@ def _verify_forward(p: Point, fp: Point, forward_search: bool, neighbour_candida
         fp = fp.following
 
 
-def _verify_backward(p: Point, bp: Point, backward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
+def _verify_backward(p: _Point, bp: _Point, backward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
     while backward_search and (p.dist - bp.dist) <= eps:
         dist = distance(bp.vector, p.vector)
         if dist < eps:
@@ -146,9 +146,9 @@ def _candidate_nbs(backward_search: bool,
                    forward_search: bool,
                    neighbour_candidates: SortedSet,
                    k: int,
-                   p: Point,
-                   bp: Point,
-                   fp: Point):
+                   p: _Point,
+                   bp: _Point,
+                   fp: _Point):
     i = 0
     while forward_search and backward_search and i < k:
         if p.dist - bp.dist < fp.dist - p.dist:
@@ -178,7 +178,7 @@ def _candidate_nbs(backward_search: bool,
 
 
 def _ti(vectors: np.array,
-        reference_point: np.array):
+        reference_point: np.array) -> List[_Point]:
     rp_dist = []
     for idx, v in enumerate(vectors):
         # TODO support other distances
@@ -188,9 +188,9 @@ def _ti(vectors: np.array,
     points = []
     for i, vector_id in enumerate(arg_sorted_rp_dist):
         if i == 0:
-            points.append(Point(vector_id, vectors[vector_id], rp_dist[vector_id]))
+            points.append(_Point(vector_id, vectors[vector_id], rp_dist[vector_id]))
         else:
-            point = Point(vector_id, vectors[vector_id], rp_dist[vector_id], preceding=points[i - 1])
+            point = _Point(vector_id, vectors[vector_id], rp_dist[vector_id], preceding=points[i - 1])
             points.append(point)
             points[i - 1].following = point
     return points
