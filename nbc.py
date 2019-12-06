@@ -7,21 +7,19 @@ import neighbourhood
 CLUSTER_ID = int
 VECTOR_ID = int
 CLUSTERS = Dict[VECTOR_ID, CLUSTER_ID]
-NOISE = Set[VECTOR_ID]
 KNB = Dict[VECTOR_ID, Set]
 NDF = Dict[VECTOR_ID, float]
 R_KNB = Dict[VECTOR_ID, Set]
 
 
-def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None) -> Tuple[CLUSTERS, NOISE]:
+def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None) -> CLUSTERS:
     """A Neighborhood-Based Clustering Algorithm.
 
     :param vectors: numpy array in NxD dim (N - number of examples, D - dimensionality of each example)
     :param k: parameter of minimum required neighbours
     :param reference_point: (optional) reference point to use the Triangle Inequality optimization
-    :return: Tuple of:
-                Dictionary with indices (based on the position in vectors param) as keys and cluster index as value
-                Set of noise points without any assigned cluster.
+    :return: Dictionary with indices as keys (based on the position in vectors param) and cluster index as value.
+             Cluster index equal to -1 means a noise example.
     """
     clusters = {}
     for idx, _ in enumerate(vectors):
@@ -48,9 +46,9 @@ def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None
                 dense_points.add(n_idx)
 
         while dense_points:
-            p = dense_points.pop()
-            for n_idx in knb[p]:
-                if _has_cluster(idx, clusters):
+            dp = dense_points.pop()
+            for n_idx in knb[dp]:
+                if _has_cluster(n_idx, clusters):
                     continue
                 clusters[n_idx] = current_cluster_id
                 if _is_dense_point(n_idx, ndf):
@@ -62,7 +60,7 @@ def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None
         if clusters[idx] == -1:
             noise.add(idx)
 
-    return clusters, noise
+    return clusters
 
 
 def _is_dense_point(idx: VECTOR_ID, ndf: NDF) -> bool:

@@ -10,8 +10,11 @@ R_KNB = Dict[VECTOR_ID, Set]
 
 
 # TODO refactor to make it a parameter
+# def distance(v1: np.array, v2: np.array) -> float:
+#     return np.linalg.norm(v1 - v2)
+
 def distance(v1: np.array, v2: np.array) -> float:
-    return np.linalg.norm(v1 - v2)
+    return np.abs(v1 - v2).sum()
 
 
 class _Point:
@@ -37,11 +40,12 @@ def k_neighbourhood(vectors: np.array, k: int) -> Tuple[KNB, R_KNB]:
         distances = []
         for idx2, v2 in enumerate(vectors):
             if idx1 != idx2:
-                dist = distance(v2, v1)
+                dist = distance(v1, v2)
                 distances.append((idx2, dist))
+        # TODO use sorted set to optimise instead of sorting and adding all examples
         distances.sort(key=lambda t: t[1])
         eps = distances[:k][-1][1]
-        neighbours = {idx for (idx, dist) in distances if eps >= dist}
+        neighbours = {i for (i, d) in distances if eps >= d}
         _fill(knb, r_knb, idx1, neighbours)
 
     return knb, r_knb

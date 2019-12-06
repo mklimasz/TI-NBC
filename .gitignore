@@ -1,3 +1,5 @@
 *.iml
 __pycache__/
 .idea
+data
+*.ipynb
