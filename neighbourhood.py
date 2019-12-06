@@ -10,11 +10,8 @@ R_KNB = Dict[VECTOR_ID, Set]
 
 
 # TODO refactor to make it a parameter
-# def distance(v1: np.array, v2: np.array) -> float:
-#     return np.linalg.norm(v1 - v2)
-
 def distance(v1: np.array, v2: np.array) -> float:
-    return np.abs(v1 - v2).sum()
+    return np.linalg.norm(v1 - v2)
 
 
 class _Point:
