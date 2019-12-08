@@ -24,7 +24,6 @@ def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None
     clusters = {}
     for idx, _ in enumerate(vectors):
         clusters[idx] = -1
-    noise = set()
 
     if reference_point is not None:
         knb, r_knb = neighbourhood.ti_k_neighbourhood(vectors, k, reference_point)
@@ -55,10 +54,6 @@ def nbc(vectors: np.array, k: int, reference_point: Union[None, np.array] = None
                     dense_points.add(n_idx)
 
         current_cluster_id += 1
-
-    for idx, v in enumerate(vectors):
-        if clusters[idx] == -1:
-            noise.add(idx)
 
     return clusters
 
