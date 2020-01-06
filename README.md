@@ -4,6 +4,7 @@ NBC [[1]](#references) and TI-NBC [[2]](#references) implementations for Data Mi
 ## Installation
 ### Build
 ```bash
+pip install -r requirements.txt
 python setup.py build_ext --inplace
 ```
 ### Run
@@ -20,6 +21,14 @@ vectors = np.array([
 ])
 k = 1
 clusters = nbc.nbc(vectors=vectors, k=k)
+```
+Output - dictionary (vector id, cluster id - where -1 stands for a noise):
+```bash
+{0: 0, 1: 0, 2: 0, 3: 1, 4: 1}
+```
+### Unit tests
+```bash
+python -m unittest discover "*_test.py"
 ```
 
 ## NBC algorithm 
