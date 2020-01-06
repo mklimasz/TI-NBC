@@ -1,6 +1,9 @@
 from typing import Set, Dict, Tuple, List
 
-import numpy as np
+import numpy as pnp
+cimport numpy as np
+cimport cython
+import collections
 from sortedcontainers import SortedSet
 
 VECTOR_ID = int
@@ -8,11 +11,18 @@ KNB = Dict[VECTOR_ID, Set]
 NDF = Dict[VECTOR_ID, float]
 R_KNB = Dict[VECTOR_ID, Set]
 
+cdef extern from "math.h":
+    double sqrt(double v)
+    double pow(double base, double exponent)
 
-# TODO refactor to make it a parameter
-def distance(v1: np.array, v2: np.array) -> float:
-    return np.linalg.norm(v1 - v2)
-
+@cython.boundscheck(False)
+def distance(np.ndarray[np.float64_t, ndim=1] v1, np.ndarray[np.float64_t, ndim=1] v2) -> float:
+    cdef Py_ssize_t i
+    cdef Py_ssize_t n = v1.shape[0]
+    cdef double dist = 0.0
+    for i in range(n):
+        dist += pow(v1[i] - v2[i], 2.0)
+    return sqrt(dist)
 
 class _Point:
 
@@ -30,25 +40,28 @@ class _Point:
         return "idx: {}, vector: {}, dist: {}".format(self.idx, self.vector, self.dist)
 
 
-def k_neighbourhood(vectors: np.array, k: int) -> Tuple[KNB, R_KNB]:
+def k_neighbourhood(vectors: np.ndarray, k: int) -> Tuple[KNB, R_KNB]:
     knb, r_knb = _init(vectors)
 
     for idx1, v1 in enumerate(vectors):
-        distances = []
+        neighbour_candidates = collections.deque(maxlen=len(vectors) - 1)
         for idx2, v2 in enumerate(vectors):
             if idx1 != idx2:
                 dist = distance(v1, v2)
-                distances.append((idx2, dist))
-        # TODO use sorted set to optimise instead of sorting and adding all examples
-        distances.sort(key=lambda t: t[1])
-        eps = distances[:k][-1][1]
-        neighbours = {i for (i, d) in distances if eps >= d}
-        _fill(knb, r_knb, idx1, neighbours)
+                neighbour_candidates.append((idx2, dist))
+        neighbour_candidates = sorted(neighbour_candidates, key=lambda t: t[1])
+        eps = neighbour_candidates[:k][-1][1]
 
+        neighbours = set()
+        for (i, d) in neighbour_candidates:
+            if d > eps:
+                break
+            neighbours.add(i)
+        _fill(knb, r_knb, idx1, neighbours)
     return knb, r_knb
 
 
-def ti_k_neighbourhood(vectors: np.array, k: int, reference_point: np.array) -> Tuple[KNB, R_KNB]:
+def ti_k_neighbourhood(vectors: np.ndarray, k: int, reference_point: np.ndarray) -> Tuple[KNB, R_KNB]:
     knb, r_knb = _init(vectors)
 
     points = _ti(vectors, reference_point)
@@ -178,14 +191,13 @@ def _candidate_nbs(backward_search: bool,
     return bp, fp, backward_search, forward_search
 
 
-def _ti(vectors: np.array,
-        reference_point: np.array) -> List[_Point]:
+def _ti(vectors: np.ndarray,
+        reference_point: np.ndarray) -> List[_Point]:
     rp_dist = []
     for idx, v in enumerate(vectors):
-        # TODO support other distances
         dist = distance(v, reference_point)
         rp_dist.append(dist)
-    arg_sorted_rp_dist = np.argsort(rp_dist)
+    arg_sorted_rp_dist = pnp.argsort(rp_dist)
     points = []
     for i, vector_id in enumerate(arg_sorted_rp_dist):
         if i == 0:

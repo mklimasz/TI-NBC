@@ -1,5 +1,26 @@
 # (TI-)NBC
-NBC [[1]](#references) and TI-NBC [[2]](#references) implementations for Data Mining course @ WUT. 
+NBC [[1]](#references) and TI-NBC [[2]](#references) implementations for Data Mining course @ WUT.
+ 
+## Installation
+### Build
+```bash
+python setup.py build_ext --inplace
+```
+### Run
+```python
+import nbc
+import numpy as np
+
+vectors = np.array([
+    [0.0, 0.0],
+    [1.0, 1.0],
+    [2.0, 2.0],
+    [10.0, 10.0],
+    [11.0, 11.0]
+])
+k = 1
+clusters = nbc.nbc(vectors=vectors, k=k)
+```
 
 ## NBC algorithm 
 

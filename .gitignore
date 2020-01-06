@@ -3,3 +3,10 @@ __pycache__/
 .idea
 data
 *.ipynb
+build/
+*.html
+*.c
+*.cpp
+*.so
+main.py
+*.sh

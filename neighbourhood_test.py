@@ -11,9 +11,9 @@ class KNeighbourhoodTest(unittest.TestCase):
         # given
         k = 2
         vectors = np.array([
-            [0, 0, 0, 0],
-            [1, 1, 1, 1],
-            [2, 2, 1, 1],
+            [0.0, 0.0, 0.0, 0.0],
+            [1.0, 1.0, 1.0, 1.0],
+            [2.0, 2.0, 1.0, 1.0],
         ])
 
         # when
@@ -27,11 +27,11 @@ class KNeighbourhoodTest(unittest.TestCase):
         # given
         k = 2
         vectors = np.array([
-            [0, 0],
-            [1, 1],
-            [2, 2],
-            [3, 3],
-            [2, 3]
+            [0.0, 0.0],
+            [1.0, 1.0],
+            [2.0, 2.0],
+            [3.0, 3.0],
+            [2.0, 3.0]
         ])
 
         # when
