@@ -3,7 +3,6 @@ from typing import Set, Dict, Tuple, List
 import numpy as pnp
 cimport numpy as np
 cimport cython
-import collections
 from sortedcontainers import SortedSet
 
 VECTOR_ID = int
@@ -23,6 +22,7 @@ def distance(np.ndarray[np.float64_t, ndim=1] v1, np.ndarray[np.float64_t, ndim=
     for i in range(n):
         dist += pow(v1[i] - v2[i], 2.0)
     return sqrt(dist)
+
 
 class _Point:
 
@@ -44,12 +44,12 @@ def k_neighbourhood(vectors: np.ndarray, k: int) -> Tuple[KNB, R_KNB]:
     knb, r_knb = _init(vectors)
 
     for idx1, v1 in enumerate(vectors):
-        neighbour_candidates = collections.deque(maxlen=len(vectors) - 1)
+        neighbour_candidates = []
         for idx2, v2 in enumerate(vectors):
             if idx1 != idx2:
                 dist = distance(v1, v2)
                 neighbour_candidates.append((idx2, dist))
-        neighbour_candidates = sorted(neighbour_candidates, key=lambda t: t[1])
+        neighbour_candidates.sort(key=lambda t: t[1])
         eps = neighbour_candidates[:k][-1][1]
 
         neighbours = set()
@@ -59,7 +59,6 @@ def k_neighbourhood(vectors: np.ndarray, k: int) -> Tuple[KNB, R_KNB]:
             neighbours.add(i)
         _fill(knb, r_knb, idx1, neighbours)
     return knb, r_knb
-
 
 def ti_k_neighbourhood(vectors: np.ndarray, k: int, reference_point: np.ndarray) -> Tuple[KNB, R_KNB]:
     knb, r_knb = _init(vectors)
@@ -72,13 +71,11 @@ def ti_k_neighbourhood(vectors: np.ndarray, k: int, reference_point: np.ndarray)
 
     return knb, r_knb
 
-
 def ndf(knb: KNB, r_knb: R_KNB) -> NDF:
     ndfs = {}
     for k in knb.keys():
         ndfs[k] = len(r_knb[k]) / len(knb[k])
     return ndfs
-
 
 def _init(vectors):
     knb = {}
@@ -87,12 +84,10 @@ def _init(vectors):
         r_knb[i] = set()
     return knb, r_knb
 
-
 def _fill(knb, r_knb, vector_idx, neighbours):
     knb[vector_idx] = neighbours
     for n in neighbours:
         r_knb[n].add(vector_idx)
-
 
 def _ti_neighbours(point: _Point, k):
     bp = point
@@ -113,10 +108,9 @@ def _ti_neighbours(point: _Point, k):
                                                              fp)
     eps = neighbour_candidates[-1][1]
     # TODO make generic verify function
-    _verify_backward(point, bp, backward_search, neighbour_candidates, k, eps)
-    _verify_forward(point, fp, forward_search, neighbour_candidates, k, eps)
+    eps = _verify_backward(point, bp, backward_search, neighbour_candidates, k, eps)
+    eps = _verify_forward(point, fp, forward_search, neighbour_candidates, k, eps)
     return [n[0].idx for n in neighbour_candidates]
-
 
 def _verify_forward(p: _Point, fp: _Point, forward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
     while forward_search and (p.dist - fp.dist) <= eps:
@@ -135,7 +129,7 @@ def _verify_forward(p: _Point, fp: _Point, forward_search: bool, neighbour_candi
             neighbour_candidates.add((fp, dist))
         forward_search = fp.following
         fp = fp.following
-
+    return eps
 
 def _verify_backward(p: _Point, bp: _Point, backward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
     while backward_search and (p.dist - bp.dist) <= eps:
@@ -154,7 +148,7 @@ def _verify_backward(p: _Point, bp: _Point, backward_search: bool, neighbour_can
             neighbour_candidates.add((bp, dist))
         backward_search = bp.preceding
         bp = bp.preceding
-
+    return eps
 
 def _candidate_nbs(backward_search: bool,
                    forward_search: bool,
@@ -189,7 +183,6 @@ def _candidate_nbs(backward_search: bool,
         backward_search = bp.preceding
         bp = bp.preceding
     return bp, fp, backward_search, forward_search
-
 
 def _ti(vectors: np.ndarray,
         reference_point: np.ndarray) -> List[_Point]:
