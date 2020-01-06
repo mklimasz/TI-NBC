@@ -1,8 +1,7 @@
-from typing import Dict, Set, Tuple, Union
+from typing import Dict, Set, Union
 
 import numpy as np
 import neighbourhood
-from libcpp.map cimport map
 
 CLUSTER_ID = int
 VECTOR_ID = int
