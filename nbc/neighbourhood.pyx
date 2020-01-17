@@ -112,7 +112,6 @@ def _ti_neighbours(point: _Point, k):
     return [n[0].idx for n in neighbour_candidates]
 
 
-# zrobic tez k a nie tylko k+ zeby bylo niedetmistycznie (opcjalnie)
 def _verify_forward(p: _Point, fp: _Point, forward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
     while forward_search and (p.dist - fp.dist) <= eps:
         dist = distance(fp.vector, p.vector)
