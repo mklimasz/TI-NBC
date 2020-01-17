@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-import neighbourhood
+from nbc import neighbourhood
 
 
 class KNeighbourhoodTest(unittest.TestCase):

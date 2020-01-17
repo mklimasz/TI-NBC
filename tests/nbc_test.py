@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-import nbc
+from nbc import clustering
 
 
 class NeighbourhoodBasedClusteringTest(unittest.TestCase):
@@ -19,8 +19,8 @@ class NeighbourhoodBasedClusteringTest(unittest.TestCase):
         k = 2
 
         # when
-        c = nbc.nbc(vectors=np.vstack((cluster_0, cluster_1)),
-                    k=k)
+        c = clustering.nbc(vectors=np.vstack((cluster_0, cluster_1)),
+                           k=k)
         # then
         expected_clusters = {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1}
         self.assertDictEqual(c, expected_clusters)
@@ -37,9 +37,9 @@ class NeighbourhoodBasedClusteringTest(unittest.TestCase):
         k = 2
 
         # when
-        c = nbc.nbc(vectors=np.vstack((cluster_0, cluster_1)),
-                    k=k,
-                    reference_point=np.array([-1.0, -1.0]))
+        c = clustering.nbc(vectors=np.vstack((cluster_0, cluster_1)),
+                           k=k,
+                           reference_point=np.array([-1.0, -1.0]))
 
         # then
         expected_clusters = {0: 0, 1: 0, 2: 0, 3: 1, 4: 1, 5: 1}

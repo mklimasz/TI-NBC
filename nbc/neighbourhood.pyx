@@ -12,7 +12,6 @@ R_KNB = Dict[VECTOR_ID, Set]
 
 cdef extern from "math.h":
     double sqrt(double v)
-    double pow(double base, double exponent)
 
 @cython.boundscheck(False)
 def distance(np.ndarray[np.float64_t, ndim=1] v1, np.ndarray[np.float64_t, ndim=1] v2) -> float:
@@ -20,7 +19,7 @@ def distance(np.ndarray[np.float64_t, ndim=1] v1, np.ndarray[np.float64_t, ndim=
     cdef Py_ssize_t n = v1.shape[0]
     cdef double dist = 0.0
     for i in range(n):
-        dist += pow(v1[i] - v2[i], 2.0)
+        dist += (v1[i] - v2[i])**2.0
     return sqrt(dist)
 
 
@@ -112,6 +111,8 @@ def _ti_neighbours(point: _Point, k):
     eps = _verify_forward(point, fp, forward_search, neighbour_candidates, k, eps)
     return [n[0].idx for n in neighbour_candidates]
 
+
+# zrobic tez k a nie tylko k+ zeby bylo niedetmistycznie (opcjalnie)
 def _verify_forward(p: _Point, fp: _Point, forward_search: bool, neighbour_candidates: SortedSet, k: int, eps: float):
     while forward_search and (p.dist - fp.dist) <= eps:
         dist = distance(fp.vector, p.vector)

@@ -2,14 +2,17 @@
 NBC [[1]](#references) and TI-NBC [[2]](#references) implementations for Data Mining course @ WUT.
  
 ## Installation
-### Build
+### Install
 ```bash
-pip install -r requirements.txt
-python setup.py build_ext
+make install
 ```
-### Run
+### Run (cmd)
+```bash
+nbc --path "comma_separated_dataset.csv"
+```
+### Run (python)
 ```python
-import nbc
+from nbc import clustering
 import numpy as np
 
 vectors = np.array([
@@ -20,7 +23,7 @@ vectors = np.array([
     [11.0, 11.0]
 ])
 k = 1
-clusters = nbc.nbc(vectors=vectors, k=k)
+clusters = clustering.nbc(vectors=vectors, k=k)
 ```
 Output - dictionary (vector id, cluster id - where -1 stands for a noise):
 ```bash
@@ -28,7 +31,7 @@ Output - dictionary (vector id, cluster id - where -1 stands for a noise):
 ```
 ### Unit tests
 ```bash
-python -m unittest discover "*_test.py"
+make test
 ```
 
 ## NBC algorithm 
@@ -38,4 +41,4 @@ python -m unittest discover "*_test.py"
 ## References
 [1] [Zhou S., Zhao Y., Guan J., Huang J. (2005) A Neighborhood-Based Clustering Algorithm. In: Ho T.B., Cheung D., Liu H. (eds) Advances in Knowledge Discovery and Data Mining. PAKDD 2005. Lecture Notes in Computer Science, vol 3518. Springer, Berlin, Heidelberg](https://link.springer.com/chapter/10.1007/11430919_43)
 
-[2] [Kryszkiewicz M., Lasek P. (2010) A Neighborhood-Based Clustering by Means of the Triangle Inequality. In: Fyfe C., Tino P., Charles D., Garcia-Osorio C., Yin H. (eds) Intelligent Data Engineering and Automated Learning – IDEAL 2010. IDEAL 2010. Lecture Notes in Computer Science, vol 6283. Springer, Berlin, Heidelberg](https://link.springer.com/chapter/10.1007/978-3-642-15381-5_3)
+[2] [Kryszkiewicz M., Lasek P. (2010) A Neighborhood-Based Clustering by Means of the Triangle Inequality. In: Fyfe C., Tino P., Charles D., Garcia-Osorio C., Yin H. (eds) Intelligent Data Engineering and Automated Learning – IDEAL 2010. IDEAL 2010. Lecture Notes in Computer Science, vol 6283. Springer, Berlin, Heidelberg](https://link.springer.com/chapter/10.1007/978-3-642-15381-5_35)

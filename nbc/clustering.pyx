@@ -1,7 +1,7 @@
 from typing import Dict, Set, Union
 
 import numpy as np
-import neighbourhood
+from nbc import neighbourhood
 
 CLUSTER_ID = int
 VECTOR_ID = int
