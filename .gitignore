@@ -8,5 +8,4 @@ build/
 *.c
 *.cpp
 *.so
-main.py
 *.sh
