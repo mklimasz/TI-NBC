@@ -11,6 +11,7 @@ flags.DEFINE_boolean("use_ti", default=False, short_name="ti",
                      help="Whether to use NBC with a Triangle Inequality (TI)")
 flags.DEFINE_list("reference_point", default=[], short_name="rp",
                   help="Reference point if using TI - by default list of minimums.")
+flags.DEFINE_string("output_path", default="clusters.csv", short_name="o", help="Output path for csv with clusters.")
 flags.mark_flag_as_required("path")
 
 
@@ -23,8 +24,9 @@ def run(_):
     else:
         reference_point = None
     clusters = clustering.nbc(points.values, FLAGS.k, reference_point=reference_point)
-    # TODO - add saving to file  instead of printing
-    print(clusters)
+    with open(FLAGS.output_path, "w") as csv:
+        for _, value in sorted(clusters.items(), key=lambda kv: kv[0]):
+            csv.write(f"{value}\n")
 
 
 def main():
