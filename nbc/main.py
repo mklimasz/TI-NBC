@@ -19,7 +19,7 @@ def run(_):
     df = pd.read_csv(FLAGS.path, header=None, delimiter=",")
     points = df.astype(np.float64)
     if FLAGS.use_ti:
-        reference_point = (np.array(FLAGS.reference_point) if FLAGS.reference_point
+        reference_point = (np.array(FLAGS.reference_point).astype(np.float64) if FLAGS.reference_point
                            else np.array([min(points[0]), min(points[1])]))
     else:
         reference_point = None
