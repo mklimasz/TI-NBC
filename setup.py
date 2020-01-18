@@ -1,4 +1,7 @@
-from setuptools import  Extension, find_packages, setup
+from setuptools import dist, Extension, find_packages, setup
+
+dist.Distribution().fetch_build_eggs(["Cython==0.29.14", "numpy==1.17.3"])
+
 from Cython.Build import cythonize
 import numpy
 
