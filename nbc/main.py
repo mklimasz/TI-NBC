@@ -20,7 +20,7 @@ def run(_):
     points = df.astype(np.float64)
     if FLAGS.use_ti:
         reference_point = (np.array(FLAGS.reference_point).astype(np.float64) if FLAGS.reference_point
-                           else np.array([min(points[0]), min(points[1])]))
+                           else np.array(points.values.min(axis=0)))
     else:
         reference_point = None
     clusters = clustering.nbc(points.values, FLAGS.k, reference_point=reference_point)

@@ -6,10 +6,10 @@ test:
 	python -m pytest
 
 clean:
-	rm nbc/*.c
-	rm nbc/*.so
-	rm nbc/*.html
-	rm -r .pytest_cache
-	rm -r build/
-	rm -r dist/
-	rm -r nbc.egg-info
+	rm -f nbc/*.c
+	rm -f nbc/*.so
+	rm -f nbc/*.html
+	rm -fr .pytest_cache
+	rm -fr build/
+	rm -fr dist/
+	rm -fr nbc.egg-info

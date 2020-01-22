@@ -29,6 +29,16 @@ Output - dictionary (vector id, cluster id - where -1 stands for a noise):
 ```bash
 {0: 0, 1: 0, 2: 0, 3: 1, 4: 1}
 ```
+
+### Docker
+Building docker image
+```bash
+docker build -t nbc:latest .
+```
+Example run script (assuming input and output should be in "data" directory)
+```bash
+bash run_docker.sh
+```
 ### Unit tests
 ```bash
 make test
