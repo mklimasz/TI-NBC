@@ -37,7 +37,7 @@ Output - dictionary (vector id, cluster id - where -1 stands for a noise):
     (an integer)
   -o,--output_path: Output path for csv with clusters.
     (default: 'clusters.csv')
-  -p,--path: Path to dataset as csv.
+  -p,--path: Path to dataset as comma separated csv.
   -rp,--reference_point: Reference point if using TI - by default list of minimums.
     (a comma separated list)
   -ti,--[no]use_ti: Whether to use NBC with a Triangle Inequality (TI)

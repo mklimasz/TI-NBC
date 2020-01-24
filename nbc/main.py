@@ -6,9 +6,9 @@ from nbc import clustering
 
 FLAGS = flags.FLAGS
 flags.DEFINE_integer("k", default=5, help="Nearest neighbours count.")
-flags.DEFINE_string("path", default=None, short_name="p", help="Path to dataset as csv.")
+flags.DEFINE_string("path", default=None, short_name="p", help="Path to dataset as comma separated csv.")
 flags.DEFINE_boolean("use_ti", default=False, short_name="ti",
-                     help="Whether to use NBC with a Triangle Inequality (TI)")
+                     help="Whether to use NBC with a Triangle Inequality (TI).")
 flags.DEFINE_list("reference_point", default=[], short_name="rp",
                   help="Reference point if using TI - by default list of minimums.")
 flags.DEFINE_string("output_path", default="clusters.csv", short_name="o", help="Output path for csv with clusters.")
