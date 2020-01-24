@@ -30,6 +30,25 @@ Output - dictionary (vector id, cluster id - where -1 stands for a noise):
 {0: 0, 1: 0, 2: 0, 3: 1, 4: 1}
 ```
 
+### Help / flags
+```bash
+  --k: Nearest neighbours count.
+    (default: '5')
+    (an integer)
+  -o,--output_path: Output path for csv with clusters.
+    (default: 'clusters.csv')
+  -p,--path: Path to dataset as csv.
+  -rp,--reference_point: Reference point if using TI - by default list of minimums.
+    (a comma separated list)
+  -ti,--[no]use_ti: Whether to use NBC with a Triangle Inequality (TI)
+    (default: 'false')
+
+```
+To see all flags:
+```bash
+nbc --helpfull
+```
+
 ### Docker
 Building docker image
 ```bash
